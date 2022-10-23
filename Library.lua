@@ -6,11 +6,7 @@ local RunService = game:GetService('RunService')
 local GuiService = game:GetService('GuiService')
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = game:GetService('Players').LocalPlayer;
--- local Mouse = LocalPlayer:GetMouse();
-local Mouse = {
-    X = 0,
-    Y = 0
-}
+local Mouse = LocalPlayer:GetMouse();
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
@@ -2943,9 +2939,11 @@ function Library:CreateWindow(...)
         Cursor.Filled = true;
 
         while Outer.Visible and ScreenGui.Parent do
-            local mPos = InputService:GetMouseLocation()
-            Mouse.X = mPos.X
-            Mouse.Y = mPos.Y
+            local rmPos = InputService:GetMouseLocation()
+            local mPos = {
+                X = rmPos.X * 1.25,
+                Y = rmPos.Y * 1.25,
+            }
 
             Cursor.Color = Library.AccentColor;
             Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
