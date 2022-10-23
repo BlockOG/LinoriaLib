@@ -9,11 +9,11 @@ local LocalPlayer = game:GetService('Players').LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
 
 function getMouseX()
-    return Mouse.X * 1.25
+    return Mouse.X / 1.25
 end
 
 function getMouseY()
-    return Mouse.Y * 1.25
+    return Mouse.Y / 1.25
 end
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
