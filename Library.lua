@@ -2940,6 +2940,8 @@ function Library:CreateWindow(...)
 
         while Outer.Visible and ScreenGui.Parent do
             local mPos = InputService:GetMouseLocation()
+            mPos.X = mPos.X * 1.25
+            mPos.Y = mPos.Y * 1.25
 
             Cursor.Color = Library.AccentColor;
             Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
