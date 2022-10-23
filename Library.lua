@@ -2946,9 +2946,9 @@ function Library:CreateWindow(...)
             }
 
             Cursor.Color = Library.AccentColor;
-            Cursor.PointA = Vector2.new(mPos.X * 1.25, mPos.Y * 1.25);
-            Cursor.PointB = Vector2.new(mPos.X * 1.25, mPos.Y * 1.25) + Vector2.new(6, 14);
-            Cursor.PointC = Vector2.new(mPos.X * 1.25, mPos.Y * 1.25) + Vector2.new(-6, 14);
+            Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
+            Cursor.PointB = Vector2.new(mPos.X, mPos.Y) + Vector2.new(6, 14);
+            Cursor.PointC = Vector2.new(mPos.X, mPos.Y) + Vector2.new(-6, 14);
 
             Cursor.Visible = not InputService.MouseIconEnabled;
 
