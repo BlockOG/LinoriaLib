@@ -6,15 +6,11 @@ local RunService = game:GetService('RunService')
 local GuiService = game:GetService('GuiService')
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = game:GetService('Players').LocalPlayer;
-local Mouse = LocalPlayer:GetMouse();
-
-function getMouseX()
-    return Mouse.X / 1.25
-end
-
-function getMouseY()
-    return Mouse.Y / 1.25
-end
+-- local Mouse = LocalPlayer:GetMouse();
+local Mouse = {
+    X = 0,
+    Y = 0
+}
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
@@ -112,8 +108,8 @@ function Library:MakeDraggable(Instance, Cutoff)
    Instance.InputBegan:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
             local ObjPos = Vector2.new(
-                getMouseX() - Instance.AbsolutePosition.X,
-                getMouseY() - Instance.AbsolutePosition.Y
+                Mouse.X - Instance.AbsolutePosition.X,
+                Mouse.Y - Instance.AbsolutePosition.Y
             );
 
             if ObjPos.Y > (Cutoff or 40) then
@@ -123,9 +119,9 @@ function Library:MakeDraggable(Instance, Cutoff)
             while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
                 Instance.Position = UDim2.new(
                     0,
-                    getMouseX() - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
+                    Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
                     0,
-                    getMouseY() - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+                    Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
                 );
 
                 RenderStepped:Wait();
@@ -172,12 +168,12 @@ function Library:AddToolTip(InfoStr, HoverInstance)
     HoverInstance.MouseEnter:Connect(function()
         IsHovering = true
         
-        Tooltip.Position = UDim2.fromOffset(getMouseX() + 15, getMouseY() + 12)
+        Tooltip.Position = UDim2.fromOffset(Mouse.X + 15, Mouse.Y + 12)
         Tooltip.Visible = true
 
         while IsHovering do
             RunService.Heartbeat:Wait()
-            Tooltip.Position = UDim2.fromOffset(getMouseX() + 15, getMouseY() + 12)
+            Tooltip.Position = UDim2.fromOffset(Mouse.X + 15, Mouse.Y + 12)
         end
     end)
 
@@ -217,8 +213,8 @@ function Library:MouseIsOverOpenedFrame()
     for Frame, _ in next, Library.OpenedFrames do
         local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
 
-        if getMouseX() >= AbsPos.X and getMouseX() <= AbsPos.X + AbsSize.X
-            and getMouseY() >= AbsPos.Y and getMouseY() <= AbsPos.Y + AbsSize.Y then
+        if Mouse.X >= AbsPos.X and Mouse.X <= AbsPos.X + AbsSize.X
+            and Mouse.Y >= AbsPos.Y and Mouse.Y <= AbsPos.Y + AbsSize.Y then
 
             return true;
         end;
@@ -228,8 +224,8 @@ end;
 function Library:IsMouseOverFrame(Frame)
     local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
 
-    if getMouseX() >= AbsPos.X and getMouseX() <= AbsPos.X + AbsSize.X
-        and getMouseY() >= AbsPos.Y and getMouseY() <= AbsPos.Y + AbsSize.Y then
+    if Mouse.X >= AbsPos.X and Mouse.X <= AbsPos.X + AbsSize.X
+        and Mouse.Y >= AbsPos.Y and Mouse.Y <= AbsPos.Y + AbsSize.Y then
 
         return true;
     end;
@@ -617,11 +613,11 @@ do
                 while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
                     local MinX = SatVibMap.AbsolutePosition.X;
                     local MaxX = MinX + SatVibMap.AbsoluteSize.X;
-                    local MouseX = math.clamp(getMouseX(), MinX, MaxX);
+                    local MouseX = math.clamp(Mouse.X, MinX, MaxX);
 
                     local MinY = SatVibMap.AbsolutePosition.Y;
                     local MaxY = MinY + SatVibMap.AbsoluteSize.Y;
-                    local MouseY = math.clamp(getMouseY(), MinY, MaxY);
+                    local MouseY = math.clamp(Mouse.Y, MinY, MaxY);
 
                     ColorPicker.Sat = (MouseX - MinX) / (MaxX - MinX);
                     ColorPicker.Vib = 1 - ((MouseY - MinY) / (MaxY - MinY));
@@ -639,7 +635,7 @@ do
                 while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
                     local MinY = HueSelectorInner.AbsolutePosition.Y;
                     local MaxY = MinY + HueSelectorInner.AbsoluteSize.Y;
-                    local MouseY = math.clamp(getMouseY(), MinY, MaxY);
+                    local MouseY = math.clamp(Mouse.Y, MinY, MaxY);
 
                     ColorPicker.Hue = ((MouseY - MinY) / (MaxY - MinY));
                     ColorPicker:Display();
@@ -665,8 +661,8 @@ do
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 local AbsPos, AbsSize = PickerFrameOuter.AbsolutePosition, PickerFrameOuter.AbsoluteSize;
 
-                if getMouseX() < AbsPos.X or getMouseX() > AbsPos.X + AbsSize.X
-                    or getMouseY() < (AbsPos.Y - 20 - 1) or getMouseY() > AbsPos.Y + AbsSize.Y then
+                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
+                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
 
                     ColorPicker:Hide();
                 end;
@@ -975,8 +971,8 @@ do
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 local AbsPos, AbsSize = ModeSelectOuter.AbsolutePosition, ModeSelectOuter.AbsoluteSize;
 
-                if getMouseX() < AbsPos.X or getMouseX() > AbsPos.X + AbsSize.X
-                    or getMouseY() < (AbsPos.Y - 20 - 1) or getMouseY() > AbsPos.Y + AbsSize.Y then
+                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
+                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
 
                     ModeSelectOuter.Visible = false;
                 end;
@@ -1695,12 +1691,12 @@ do
 
         SliderInner.InputBegan:Connect(function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                local mPos = getMouseX();
+                local mPos = Mouse.X;
                 local gPos = Fill.Size.X.Offset;
                 local Diff = mPos - (Fill.AbsolutePosition.X + gPos);
 
                 while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local nMPos = getMouseX();
+                    local nMPos = Mouse.X;
                     local nX = math.clamp(gPos + (nMPos - mPos) + Diff, 0, Slider.MaxSize);
 
                     local nValue = Slider:GetValueFromXOffset(nX);
@@ -2088,8 +2084,8 @@ do
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 local AbsPos, AbsSize = ListOuter.AbsolutePosition, ListOuter.AbsoluteSize;
 
-                if getMouseX() < AbsPos.X or getMouseX() > AbsPos.X + AbsSize.X
-                    or getMouseY() < (AbsPos.Y - 20 - 1) or getMouseY() > AbsPos.Y + AbsSize.Y then
+                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
+                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
 
                     Dropdown:CloseDropdown();
                 end;
@@ -2948,6 +2944,8 @@ function Library:CreateWindow(...)
 
         while Outer.Visible and ScreenGui.Parent do
             local mPos = InputService:GetMouseLocation()
+            Mouse.X = mPos.X
+            Mouse.Y = mPos.Y
 
             Cursor.Color = Library.AccentColor;
             Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
