@@ -3037,10 +3037,18 @@ function Library:CreateWindow(...)
 
         while Outer.Visible and ScreenGui.Parent do
             local rmPos = InputService:GetMouseLocation()
-            local mPos = {
-                X = rmPos.X * 1.25,
-                Y = rmPos.Y * 1.25,
-            }
+            local mPos
+            if KRNL_LOADED then
+                mPos = {
+                    X = rmPos.X * 1.25,
+                    Y = rmPos.Y * 1.25,
+                }
+            else
+                mPos = {
+                    X = rmPos.X,
+                    Y = rmPos.Y,
+                }
+            end
 
             Cursor.Color = Library.AccentColor;
             Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
