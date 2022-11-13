@@ -45,6 +45,8 @@ local Library = {
 local RainbowStep = 0
 local Hue = 0
 
+local TouchScreen = InputService.TouchEnabled
+
 table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
     RainbowStep = RainbowStep + Delta
 
@@ -101,7 +103,7 @@ end;
 function Library:MakeDraggable(Instance, Cutoff)
     Instance.Active = true;
 
-   Instance.InputBegan:Connect(function(Input)
+    Instance.InputBegan:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
             local ObjPos = Vector2.new(
                 Mouse.X - Instance.AbsolutePosition.X,
@@ -239,7 +241,7 @@ end;
 function Library:GetDarkerColor(Color)
     local H, S, V = Color3.toHSV(Color);
     return Color3.fromHSV(H, S, V / 1.5);
-end; 
+end;
 Library.AccentColorDark = Library:GetDarkerColor(Library.AccentColor);
 
 function Library:AddToRegistry(Instance, Properties, IsHud)
@@ -343,6 +345,7 @@ do
             Value = Info.Default;
             Type = 'ColorPicker';
             Title = type(Info.Title) == 'string' and Info.Title or 'Color picker',
+            Idx = Idx,
         };
 
         function ColorPicker:SetHSVFromRGB(Color)
@@ -683,6 +686,7 @@ do
             Toggled = false;
             Mode = Info.Mode or 'Toggle'; -- Always, Toggle, Hold
             Type = 'KeyPicker';
+            Idx = Idx;
 
             SyncToggleState = Info.SyncToggleState or false;
         };
@@ -1232,6 +1236,7 @@ do
             Numeric = Info.Numeric or false;
             Finished = Info.Finished or false;
             Type = 'Input';
+            Idx = Idx;
         };
 
         local Groupbox = self;
@@ -1410,6 +1415,7 @@ do
         local Toggle = {
             Value = Info.Default or false;
             Type = 'Toggle';
+            Idx = Idx;
 
             Addons = {},
         };
@@ -1541,6 +1547,7 @@ do
             Rounding = Info.Rounding;
             MaxSize = 232;
             Type = 'Slider';
+            Idx = Idx;
         };
 
         local Groupbox = self;
@@ -1729,6 +1736,7 @@ do
             Value = Info.Multi and {};
             Multi = Info.Multi;
             Type = 'Dropdown';
+            Idx = Idx;
         };
 
         local Groupbox = self;
@@ -2302,7 +2310,18 @@ function Library:SetWatermark(Text)
     Library.WatermarkText.Text = Text;
 end;
 
-function Library:Notify(Text, Time)
+function Library:Notify(Data, Duration, Dismissable)
+    local Text, Time
+    if type(Data) == 'table' then
+        Text = Data.Text or 'Untitled Notification'
+        Time = Data.Duration or 5
+        Dismissable = Data.Dismissable or false
+    else
+        Text = Data or 'Untitled Notification'
+        Time = Duration
+        Dismissable = Dismissable or false
+    end
+
     local XSize, YSize = Library:GetTextBounds(Text, Enum.Font.Code, 14);
 
     YSize = YSize + 7
@@ -2383,7 +2402,7 @@ function Library:Notify(Text, Time)
     pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, XSize + 8 + 4, 0, YSize), 'Out', 'Quad', 0.4, true);
 
     task.spawn(function()
-        wait(Time or 5);
+        wait(Time);
 
         pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, 0, 0, YSize), 'Out', 'Quad', 0.4, true);
 
