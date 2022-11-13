@@ -2310,18 +2310,7 @@ function Library:SetWatermark(Text)
     Library.WatermarkText.Text = Text;
 end;
 
-function Library:Notify(Data, Duration, Dismissable)
-    local Text, Time
-    if type(Data) == 'table' then
-        Text = Data.Text or 'Untitled Notification'
-        Time = Data.Duration or 5
-        Dismissable = Data.Dismissable or false
-    else
-        Text = Data or 'Untitled Notification'
-        Time = Duration
-        Dismissable = Dismissable or false
-    end
-
+function Library:Notify(Text, Time)
     local XSize, YSize = Library:GetTextBounds(Text, Enum.Font.Code, 14);
 
     YSize = YSize + 7
