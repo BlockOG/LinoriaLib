@@ -18,9 +18,11 @@ ScreenGui.Parent = CoreGui;
 
 local Toggles = {};
 local Options = {};
+local Labels = {};
 
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
+getgenv().Labels = Labels;
 
 local Library = {
     Registry = {};
@@ -1013,7 +1015,7 @@ do
         });
     end;
 
-    function Funcs:AddLabel(Text, DoesWrap)
+    function Funcs:AddLabel(Text, DoesWrap, Idx)
         local Label = {};
 
         local Groupbox = self;
@@ -1064,6 +1066,9 @@ do
         Groupbox:AddBlank(5);
         Groupbox:Resize();
 
+        if Idx then
+            Labels[Idx] = Label
+        end
         return Label;
     end;
 
